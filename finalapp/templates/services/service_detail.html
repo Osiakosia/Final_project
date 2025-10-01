@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ object.get_service_type_display }} ({{ object.service_date }})</h2>
+<p>Car: <a href="{% url 'car_detail' object.car.pk %}">{{ object.car }}</a></p>
+<p>Description: {{ object.description }}</p>
+<p>Mileage: {{ object.mileage_at_service }}</p>
+<p>Cost: ${{ object.cost }}</p>
+<p>Mechanic: {{ object.mechanic|default:"—" }}</p>
+
+<p>
+  <a href="{% url 'service_update' object.pk %}">✏️ Edit</a> |
+  <a href="{% url 'service_delete' object.pk %}">🗑️ Delete</a>
+</p>
+
+<h3>Parts Used</h3>
+<ul>
+  {% for sp in object.used_parts.all %}
+    <li>{{ sp.quantity_used }} × {{ sp.part.name }}</li>
+  {% empty %}
+    <li>No parts used.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
