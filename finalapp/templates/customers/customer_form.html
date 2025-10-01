@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ object.first_name }} {{ object.last_name }}</h2>
+<p>📞 {{ object.phone }}</p>
+<p>✉️ {{ object.email }}</p>
+
+<h3>Cars</h3>
+<ul>
+  {% for car in object.cars.all %}
+    <li><a href="{% url 'car_detail' car.pk %}">{{ car }}</a></li>
+  {% empty %}
+    <li>No cars registered.</li>
+  {% endfor %}
+</ul>
+<a href="{% url 'car_create' %}?owner={{ object.pk }}">➕ Add Car</a>
+{% endblock %}

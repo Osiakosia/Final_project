@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Customers</h2>
+<ul>
+  {% for customer in object_list %}
+    <li><a href="{% url 'customer_detail' customer.pk %}">{{ customer }}</a></li>
+  {% empty %}
+    <li>No customers yet.</li>
+  {% endfor %}
+</ul>
+<a href="{% url 'customer_create' %}">➕ Add New Customer</a>
+{% endblock %}
