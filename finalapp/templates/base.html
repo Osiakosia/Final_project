@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auto Service</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <header>
+    <h1><a href="{% url 'home' %}">🚗 Auto Servisas</a></h1>
+    <nav>
+      <a href="{% url 'customer_list' %}">Customers</a> |
+      <a href="{% url 'car_list' %}">Cars</a> |
+      <a href="{% url 'service_list' %}">Services</a> |
+      <a href="{% url 'part_list' %}">Parts</a>
+    </nav>
+  </header>
+  <hr>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <hr>
+    <p>&copy; {{ now|date:"Y" }} Auto Service</p>
+  </footer>
+</body>
+</html>
