@@ -1,7 +1,136 @@
 from django.shortcuts import render
-
-# Create your views here.
 from django.http import HttpResponse
 
-def index(request):
-    return HttpResponse("Labas, pasauli!")
+
+# Create your views here.
+
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from .models import Customer, Car, ServiceRecord, Part
+
+
+# --- Customers ---
+class CustomerListView(ListView):
+    model = Customer
+    template_name = "customers/customer_list.html"
+
+
+class CustomerDetailView(DetailView):
+    model = Customer
+    template_name = "customers/customer_detail.html"
+
+
+class CustomerCreateView(CreateView):
+    model = Customer
+    fields = ["first_name", "last_name", "phone", "email"]
+    template_name = "customers/customer_form.html"
+    success_url = reverse_lazy("customer_list")
+
+
+class CustomerUpdateView(UpdateView):
+    model = Customer
+    fields = ["first_name", "last_name", "phone", "email"]
+    template_name = "customers/customer_form.html"
+    success_url = reverse_lazy("customer_list")
+
+
+class CustomerDeleteView(DeleteView):
+    model = Customer
+    template_name = "confirm_delete.html"
+    success_url = reverse_lazy("customer_list")
+
+
+# --- Cars ---
+class CarListView(ListView):
+    model = Car
+    template_name = "cars/car_list.html"
+
+
+class CarDetailView(DetailView):
+    model = Car
+    template_name = "cars/car_detail.html"
+
+
+class CarCreateView(CreateView):
+    model = Car
+    fields = ["owner", "model", "year", "vin", "license_plate", "color", "mileage"]
+    template_name = "cars/car_form.html"
+    success_url = reverse_lazy("car_list")
+
+
+class CarUpdateView(UpdateView):
+    model = Car
+    fields = ["owner", "model", "year", "vin", "license_plate", "color", "mileage"]
+    template_name = "cars/car_form.html"
+    success_url = reverse_lazy("car_list")
+
+
+class CarDeleteView(DeleteView):
+    model = Car
+    template_name = "confirm_delete.html"
+    success_url = reverse_lazy("car_list")
+
+
+# --- Service Records ---
+class ServiceRecordListView(ListView):
+    model = ServiceRecord
+    template_name = "services/service_list.html"
+
+
+class ServiceRecordDetailView(DetailView):
+    model = ServiceRecord
+    template_name = "services/service_detail.html"
+
+
+class ServiceRecordCreateView(CreateView):
+    model = ServiceRecord
+    fields = ["car", "service_type", "description", "mileage_at_service",
+              "service_date", "cost", "mechanic"]
+    template_name = "services/service_form.html"
+    success_url = reverse_lazy("service_list")
+
+
+class ServiceRecordUpdateView(UpdateView):
+    model = ServiceRecord
+    fields = ["car", "service_type", "description", "mileage_at_service",
+              "service_date", "cost", "mechanic"]
+    template_name = "services/service_form.html"
+    success_url = reverse_lazy("service_list")
+
+
+class ServiceRecordDeleteView(DeleteView):
+    model = ServiceRecord
+    template_name = "confirm_delete.html"
+    success_url = reverse_lazy("service_list")
+
+
+# --- Parts ---
+class PartListView(ListView):
+    model = Part
+    template_name = "parts/part_list.html"
+
+
+class PartDetailView(DetailView):
+    model = Part
+    template_name = "parts/part_detail.html"
+
+
+class PartCreateView(CreateView):
+    model = Part
+    fields = ["name", "part_number", "description", "quantity_in_stock", "unit_price"]
+    template_name = "parts/part_form.html"
+    success_url = reverse_lazy("part_list")
+
+
+class PartUpdateView(UpdateView):
+    model = Part
+    fields = ["name", "part_number", "description", "quantity_in_stock", "unit_price"]
+    template_name = "parts/part_form.html"
+    success_url = reverse_lazy("part_list")
+
+
+class PartDeleteView(DeleteView):
+    model = Part
+    template_name = "confirm_delete.html"
+    success_url = reverse_lazy("part_list")
