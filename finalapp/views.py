@@ -9,6 +9,18 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from .models import Customer, Car, ServiceRecord, Part
 
+from django.shortcuts import render
+from .models import Customer, Car, ServiceRecord
+
+def index(request):
+    context = {
+        "customer_count": Customer.objects.count(),
+        "car_count": Car.objects.count(),
+        "service_count": ServiceRecord.objects.count(),
+    }
+    return render(request, "index.html", context)
+
+
 
 # --- Customers ---
 class CustomerListView(ListView):
