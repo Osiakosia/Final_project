@@ -30,9 +30,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
 LOGIN_REDIRECT_URL = '/'
 
-# LOGOUT_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
+
+
 
 from django.contrib.messages import constants as messages
 
@@ -46,10 +49,6 @@ MESSAGE_TAGS = {
     messages.WARNING: "warning",
     messages.ERROR: "danger",
 }
-
-# Redirect after logout
-LOGOUT_REDIRECT_URL = "index"
-
 
   # Application definition
 
@@ -126,9 +125,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mano_pastas@gmail.com'
-# el. pašto adresas iš kurio siųsite
-EMAIL_HOST_PASSWORD = 'VerySecret'
+EMAIL_HOST_USER = "your_email@gmail.com"
+EMAIL_HOST_PASSWORD = "your_app_password"
 # slaptažodis
 
 
@@ -147,10 +145,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "/static/"
 
-# During development (where your CSS, JS lives)
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [
+    BASE_DIR / "finalapp" / "static",   # point to your app’s static folder
+]
 
 # For production (where Django will collect files)
 STATIC_ROOT = BASE_DIR / "staticfiles"
