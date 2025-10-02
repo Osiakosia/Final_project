@@ -1,0 +1,66 @@
+/* ==========================
+   Global Styles
+   ========================== */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f8f9fa; /* light gray background */
+}
+
+/* ==========================
+   Navbar
+   ========================== */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+/* ==========================
+   Flash Messages (Django messages framework)
+   ========================== */
+.alert {
+    margin-top: 1rem;
+}
+
+/* ==========================
+   Dashboard Cards
+   ========================== */
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+    transform: scale(1.03);
+}
+
+/* ==========================
+   Car Animation Under Navbar
+   ========================== */
+.car-animation {
+    position: absolute;
+    top: -18px;   /* move car slightly above line */
+    left: -50px;  /* start off-screen */
+    font-size: 1.5rem; /* size of car */
+    animation: drive 6s linear infinite;
+}
+
+@keyframes drive {
+    0% { left: -50px; }
+    100% { left: 100%; }
+}
+/* 🚗 Car moving back and forth inside navbar */
+.car-navbar {
+    position: absolute;
+    bottom: 5px;       /* place near bottom of navbar */
+    left: -50px;       /* start off-screen */
+    font-size: 1.5rem;
+    animation: driveBackAndForth 8s linear infinite;
+}
+
+@keyframes driveBackAndForth {
+    0%   { left: -50px; transform: scaleX(1); }    /* start left */
+    45%  { left: 100%; transform: scaleX(1); }     /* move right */
+    50%  { left: 100%; transform: scaleX(-1); }    /* flip car */
+    95%  { left: -50px; transform: scaleX(-1); }   /* move left */
+    100% { left: -50px; transform: scaleX(1); }    /* reset facing right */
+}
