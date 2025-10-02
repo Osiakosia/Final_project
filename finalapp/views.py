@@ -1,25 +1,48 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-
 # Create your views here.
 
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
-from .models import Customer, Car, ServiceRecord, Part
-
+from .models import  Part
 from django.shortcuts import render
 from .models import Customer, Car, ServiceRecord
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
+from django.contrib.auth.views import LogoutView
+from django.contrib import messages
+
+
+def signup(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # log user in after signup
+            return redirect("index")
+    else:
+        form = UserCreationForm()
+    return render(request, "registration/signup.html", {"form": form})
+
 
 def index(request):
     context = {
         "customer_count": Customer.objects.count(),
         "car_count": Car.objects.count(),
         "service_count": ServiceRecord.objects.count(),
+        "recent_services": ServiceRecord.objects.select_related("car").order_by("-service_date")[:5],
     }
     return render(request, "index.html", context)
 
+
+
+class CustomLogoutView(LogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(request, "You have been logged out successfully.")
+        return super().dispatch(request, *args, **kwargs)
 
 
 # --- Customers ---

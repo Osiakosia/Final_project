@@ -1,25 +1,71 @@
-path("", views.index, name="i{% extends "base.html" %}
+{% extends "base.html" %}
 {% block content %}
-<h1>Auto Service Dashboard</h1>
+<h1 class="mb-4">Auto Service Dashboard</h1>
 
-<div style="display: flex; gap: 20px; margin-top: 20px;">
-  <div style="flex:1; padding:20px; border:1px solid #ccc; border-radius:8px; text-align:center;">
-    <h2>{{ customer_count }}</h2>
-    <p>Customers</p>
-    <a href="{% url 'customer_list' %}">View All</a>
+<!-- Summary Cards -->
+<div class="row text-center">
+  <!-- Customers -->
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-primary">
+      <div class="card-body">
+        <h2 class="card-title text-primary">{{ customer_count }}</h2>
+        <p class="card-text">Customers</p>
+        <a href="{% url 'customer_list' %}" class="btn btn-primary btn-sm">View All</a>
+      </div>
+    </div>
   </div>
 
-  <div style="flex:1; padding:20px; border:1px solid #ccc; border-radius:8px; text-align:center;">
-    <h2>{{ car_count }}</h2>
-    <p>Cars</p>
-    <a href="{% url 'car_list' %}">View All</a>
+  <!-- Cars -->
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-success">
+      <div class="card-body">
+        <h2 class="card-title text-success">{{ car_count }}</h2>
+        <p class="card-text">Cars</p>
+        <a href="{% url 'car_list' %}" class="btn btn-success btn-sm">View All</a>
+      </div>
+    </div>
   </div>
 
-  <div style="flex:1; padding:20px; border:1px solid #ccc; border-radius:8px; text-align:center;">
-    <h2>{{ service_count }}</h2>
-    <p>Service Records</p>
-    <a href="{% url 'service_list' %}">View All</a>
+  <!-- Services -->
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-warning">
+      <div class="card-body">
+        <h2 class="card-title text-warning">{{ service_count }}</h2>
+        <p class="card-text">Service Records</p>
+        <a href="{% url 'service_list' %}" class="btn btn-warning btn-sm">View All</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Service Records -->
+<h3 class="mt-5">Recent Service Records</h3>
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <table class="table table-striped mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Date</th>
+          <th>Car</th>
+          <th>Service</th>
+          <th>Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in recent_services %}
+        <tr>
+          <td>{{ record.service_date }}</td>
+          <td><a href="{% url 'car_detail' record.car.pk %}">{{ record.car }}</a></td>
+          <td><a href="{% url 'service_detail' record.pk %}">{{ record.get_service_type_display }}</a></td>
+          <td>${{ record.cost }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center">No recent service records.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 {% endblock %}
-ndex"),
