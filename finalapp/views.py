@@ -37,6 +37,13 @@ def index(request):
     }
     return render(request, "index.html", context)
 
+def test_alerts(request):
+    messages.success(request, "✅ Success! Your action worked.")
+    messages.error(request, "❌ Error! Something went wrong.")
+    messages.warning(request, "⚠️ Warning! Be careful.")
+    messages.info(request, "ℹ️ Info: This is just a test message.")
+    return redirect("index")
+
 
 
 class CustomLogoutView(LogoutView):
@@ -169,3 +176,5 @@ class PartDeleteView(DeleteView):
     model = Part
     template_name = "confirm_delete.html"
     success_url = reverse_lazy("part_list")
+
+

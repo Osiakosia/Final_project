@@ -4,6 +4,7 @@ from .views import CustomLogoutView
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("test/", views.test_alerts, name="test_alerts"),
     path("", views.CustomerListView.as_view(), name="home"),
     path("signup/", views.signup, name="signup"),
     path("accounts/logout/", CustomLogoutView.as_view(next_page="index"), name="logout"),

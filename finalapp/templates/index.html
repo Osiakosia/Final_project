@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="mb-4">Auto Service Dashboard</h1>
+
+<div class="text-center">
+    <h1 class="mb-4">Auto Service Dashboard</h1>
+    <p class="lead text-muted">Welcome to your autoservice management system.</p>
+</div>
 
 <!-- Summary Cards -->
 <div class="row text-center">
@@ -67,5 +71,9 @@
       </tbody>
     </table>
   </div>
+</div>
+<div class="text-center mt-5">
+    <h1>Welcome to the Test App</h1>
+    <a href="{% url 'test_alerts' %}" class="btn btn-primary mt-3">Trigger Test Alerts</a>
 </div>
 {% endblock %}
