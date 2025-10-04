@@ -108,6 +108,9 @@ class Car(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # New field for pictures
+    picture = models.ImageField(upload_to="car_pictures/", blank=True, null=True)
+
     def __str__(self):
         return f"{self.model} ({self.license_plate})"
 
