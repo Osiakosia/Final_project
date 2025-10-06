@@ -8,6 +8,13 @@
 <p>Color: {{ object.color }}</p>
 <p>Mileage: {{ object.mileage }}</p>
 
+{% if object.picture %}
+  <img src="{{ object.picture.url }}" alt="Car picture" class="img-fluid mb-3">
+{% else %}
+  <p><em>No picture uploaded.</em></p>
+{% endif %}
+
+
 <p>
   <a href="{% url 'car_update' object.pk %}">✏️ Edit</a> |
   <a href="{% url 'car_delete' object.pk %}">🗑️ Delete</a>
