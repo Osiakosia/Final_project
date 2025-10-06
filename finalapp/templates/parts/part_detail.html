@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ object.name }}</h2>
+<p>Part Number: {{ object.part_number }}</p>
+<p>Description: {{ object.description }}</p>
+<p>Stock: {{ object.quantity_in_stock }}</p>
+<p>Unit Price: ${{ object.unit_price }}</p>
+
+<p>
+  <a href="{% url 'part_update' object.pk %}">✏️ Edit</a> |
+  <a href="{% url 'part_delete' object.pk %}">🗑️ Delete</a>
+</p>
+{% endblock %}

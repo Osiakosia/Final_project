@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Parts Inventory</h2>
+<ul>
+  {% for part in object_list %}
+    <li><a href="{% url 'part_detail' part.pk %}">{{ part }}</a> ({{ part.quantity_in_stock }} in stock)</li>
+  {% empty %}
+    <li>No parts in inventory.</li>
+  {% endfor %}
+</ul>
+<a href="{% url 'part_create' %}">➕ Add Part</a>
+{% endblock %}
