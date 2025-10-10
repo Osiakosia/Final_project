@@ -1,24 +1,63 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h2>
-  {% if object %}
-    Edit Car: {{ object }}
-  {% else %}
-    Add New Car
-  {% endif %}
-</h2>
+<div class="container mt-5">
+    <h2 class="mb-4">
+        {% if object %}Edit Car{% else %}Add New Car{% endif %}
+    </h2>
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Save</button>
-</form>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
 
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Save</button>
-</form>
+        <div class="row">
+            <!-- Left column: Picture -->
+            <div class="col-md-4">
+                {% if object and object.picture %}
+                    <label class="form-label">Current Picture</label><br>
+                    <img src="{{ object.picture.url }}" class="img-fluid rounded shadow-sm mb-3"
+                         alt="{{ object }}" style="max-height:200px;">
+                {% endif %}
 
+                <div class="mb-3">
+                    {{ form.picture.label_tag }}
+                    {{ form.picture }}
+                    {% if form.picture.errors %}
+                        <div class="text-danger">{{ form.picture.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right column: Other fields -->
+            <div class="col-md-8">
+                {% for field in form %}
+                    {% if field.name != 'picture' %}
+                        <div class="mb-3">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="text-danger">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">
+                {% if object %}Save Changes{% else %}Add Car{% endif %}
+            </button>
+            {% if object %}
+                <a href="{% url 'car_detail' object.pk %}" class="btn btn-secondary">Cancel</a>
+            {% else %}
+                <a href="{% url 'car_list' %}" class="btn btn-secondary">Cancel</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
 {% endblock %}
 

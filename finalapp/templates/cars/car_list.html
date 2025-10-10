@@ -1,12 +1,46 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h2>Cars</h2>
-<ul>
-  {% for car in object_list %}
-    <li><a href="{% url 'car_detail' car.pk %}">{{ car }}</a></li>
-  {% empty %}
-    <li>No cars yet.</li>
-  {% endfor %}
-</ul>
-<a href="{% url 'car_create' %}">➕ Add Car</a>
+<div class="container mt-4">
+    <h2 class="mb-4">Cars</h2>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'car_create' %}" class="btn btn-primary mb-3">+ Add Car</a>
+    {% endif %}
+
+    {% if object_list %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+            {% for car in object_list %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        {% if car.picture %}
+                            <img src="{{ car.picture.url }}" class="card-img-top"
+                                 style="max-height:300px; object-fit:cover;" alt="{{ car }}">
+                        {% else %}
+                            <img src="{% static 'finalapp/img/no-image.png' %}" class="card-img-top"
+                                 style="max-height:300px; object-fit:cover;" alt="No Image">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ car.model }}</h5>
+                            <p class="card-text"><strong>Owner:</strong> {{ car.owner }}</p>
+                            <p class="card-text"><strong>License Plate:</strong> {{ car.license_plate }}</p>
+                            <p class="card-text"><strong>Year:</strong> {{ car.year }}</p>
+                        </div>
+
+                        <div class="card-footer d-flex justify-content-between">
+                            <a href="{% url 'car_detail' car.pk %}" class="btn btn-info btn-sm">View</a>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'car_update' car.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No cars available yet.</p>
+    {% endif %}
+</div>
 {% endblock %}

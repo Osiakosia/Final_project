@@ -1,33 +1,41 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h2>{{ object }}</h2>
-<p>Owner: <a href="{% url 'customer_detail' object.owner.pk %}">{{ object.owner }}</a></p>
-<p>Year: {{ object.year }}</p>
-<p>VIN: {{ object.vin }}</p>
-<p>License Plate: {{ object.license_plate }}</p>
-<p>Color: {{ object.color }}</p>
-<p>Mileage: {{ object.mileage }}</p>
+<div class="container mt-4">
+    <h2>Car Details: {{ object }}</h2>
 
-{% if object.picture %}
-  <img src="{{ object.picture.url }}" alt="Car picture" class="img-fluid mb-3">
-{% else %}
-  <p><em>No picture uploaded.</em></p>
-{% endif %}
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-4">
+                {% if object.picture %}
+                    <img src="{{ object.picture.url }}" class="img-fluid rounded-start"
+                         style="max-height:200px; object-fit:cover;" alt="{{ object }}">
+                {% else %}
+                    <img src="{% static 'finalapp/img/no-image.png' %}" class="img-fluid rounded-start"
+                         style="max-height:200px; object-fit:cover;" alt="No Image">
+                {% endif %}
+            </div>
 
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ object.model }}</h5>
+                    <p class="card-text"><strong>Owner:</strong> {{ object.owner }}</p>
+                    <p class="card-text"><strong>Year:</strong> {{ object.year }}</p>
+                    <p class="card-text"><strong>VIN:</strong> {{ object.vin }}</p>
+                    <p class="card-text"><strong>License Plate:</strong> {{ object.license_plate }}</p>
+                    <p class="card-text"><strong>Color:</strong> {{ object.color|default:"N/A" }}</p>
+                    <p class="card-text"><strong>Mileage:</strong> {{ object.mileage|default:"N/A" }}</p>
+                    <p class="card-text"><small class="text-muted">Created at: {{ object.created_at|date:"Y-m-d H:i" }}</small></p>
 
-<p>
-  <a href="{% url 'car_update' object.pk %}">✏️ Edit</a> |
-  <a href="{% url 'car_delete' object.pk %}">🗑️ Delete</a>
-</p>
-
-<h3>Service History</h3>
-<ul>
-  {% for record in object.service_records.all %}
-    <li><a href="{% url 'service_detail' record.pk %}">{{ record }}</a></li>
-  {% empty %}
-    <li>No service records yet.</li>
-  {% endfor %}
-</ul>
-<a href="{% url 'service_create' %}?car={{ object.pk }}">➕ Add Service Record</a>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'car_update' object.pk %}" class="btn btn-warning">Edit Car</a>
+                    {% endif %}
+                    <a href="{% url 'car_list' %}" class="btn btn-secondary">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
