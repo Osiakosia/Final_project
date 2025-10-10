@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from django.contrib import admin
 from .models import Customer, CarMake, CarModel, Car, ServiceRecord, Part, ServicePart
-
+from django.utils.html import format_html
 
 @admin.register(CarMake)
 class CarMakeAdmin(admin.ModelAdmin):
@@ -21,10 +21,36 @@ class CarModelAdmin(admin.ModelAdmin):
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ["license_plate", "model", "year", "owner", "vin"]
+    list_display = ["license_plate","thumbnail", "model", "year", "owner", "vin"]
+    list_display_links = ('thumbnail', 'model')
     list_filter = ["model__make", "year", "color"]
     search_fields = ["license_plate", "vin", "owner__first_name", "owner__last_name"]
     autocomplete_fields = ["owner", "model"]
+
+    def thumbnail(self, obj):
+        """Show a car picture thumbnail with zoom effect on hover."""
+        if obj.picture:
+            return format_html(
+                """
+                <div style="
+                    width: 80px;
+                    height: 60px;
+                    overflow: hidden;
+                    border-radius: 8px;
+                    display: inline-block;
+                ">
+                    <img src="{}" 
+                         style="width: 100%; height: auto; transition: transform 0.3s ease;"
+                         onmouseover="this.style.transform='scale(1.6)'" 
+                         onmouseout="this.style.transform='scale(1)'" />
+                </div>
+                """,
+                obj.picture.url
+            )
+        return "—"
+
+    thumbnail.short_description = "Picture"
+
 
 
 @admin.register(Customer)
