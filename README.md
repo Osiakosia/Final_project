@@ -50,7 +50,7 @@ Supports user registration, authentication, car management, and service history 
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/autoservice.git
+git clone https://github.com/Osiakosia/Final_project.git
 cd autoservice
 ```
 
@@ -86,6 +86,11 @@ python manage.py runserver
 Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
 ---
+
+### 7. Accounts settings for test purposes 
+
+#### Admin user : Login : Admin&&    Pass  admin
+#### Simple user : Login Tina&&      Pass kjuikjui
 
 ## 📧 Email Setup
 
@@ -145,6 +150,6 @@ final_project/
 
 ---
 
-## 👨‍💻 Osvaldas
+## 👨‍💻 Author
 
 Built with ❤️ using Django & Bootstrap.
