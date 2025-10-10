@@ -1,23 +1,31 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h2>{{ object.get_service_type_display }} ({{ object.service_date }})</h2>
-<p>Car: <a href="{% url 'car_detail' object.car.pk %}">{{ object.car }}</a></p>
-<p>Description: {{ object.description }}</p>
-<p>Mileage: {{ object.mileage_at_service }}</p>
-<p>Cost: ${{ object.cost }}</p>
-<p>Mechanic: {{ object.mechanic|default:"—" }}</p>
+<div class="container mt-4">
+    <h2 class="mb-4">Service Details</h2>
 
-<p>
-  <a href="{% url 'service_update' object.pk %}">✏️ Edit</a> |
-  <a href="{% url 'service_delete' object.pk %}">🗑️ Delete</a>
-</p>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Service for: {{ object.car }}</h5>
+            <p class="card-text"><strong>Owner:</strong> {{ object.car.owner }}</p>
+            <p class="card-text"><strong>Service Date:</strong> {{ object.service_date|date:"Y-m-d" }}</p>
+            <p class="card-text"><strong>Description:</strong> {{ object.description }}</p>
+            <p class="card-text"><strong>Cost:</strong> €{{ object.cost }}</p>
+            <p class="card-text"><small class="text-muted">Created at: {{ object.created_at|date:"Y-m-d H:i" }}</small></p>
+            <p class="card-text"><small class="text-muted">Last updated: {{ object.updated_at|date:"Y-m-d H:i" }}</small></p>
+        </div>
 
-<h3>Parts Used</h3>
-<ul>
-  {% for sp in object.used_parts.all %}
-    <li>{{ sp.quantity_used }} × {{ sp.part.name }}</li>
-  {% empty %}
-    <li>No parts used.</li>
-  {% endfor %}
-</ul>
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{% url 'service_list' %}" class="btn btn-secondary">Back to Services</a>
+
+            {% if user.is_authenticated %}
+                <div>
+                    <a href="{% url 'service_update' object.pk %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'service_delete' object.pk %}" class="btn btn-danger">Delete</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
