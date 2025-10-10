@@ -1,12 +1,36 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h2>Parts Inventory</h2>
-<ul>
-  {% for part in object_list %}
-    <li><a href="{% url 'part_detail' part.pk %}">{{ part }}</a> ({{ part.quantity_in_stock }} in stock)</li>
-  {% empty %}
-    <li>No parts in inventory.</li>
-  {% endfor %}
-</ul>
-<a href="{% url 'part_create' %}">➕ Add Part</a>
+<div class="container mt-5">
+    <h2 class="mb-4">Parts</h2>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'part_create' %}" class="btn btn-success mb-3">+ Add Part</a>
+    {% endif %}
+
+    {% if parts %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for part in parts %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ part.name }}</h5>
+                            <p class="card-text"><strong>Number:</strong> {{ part.number }}</p>
+                            <p class="card-text"><strong>Price:</strong> €{{ part.price }}</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <a href="{% url 'part_detail' part.pk %}" class="btn btn-info btn-sm">View</a>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'part_update' part.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No parts found.</p>
+    {% endif %}
+</div>
 {% endblock %}
