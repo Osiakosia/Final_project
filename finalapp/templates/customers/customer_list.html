@@ -1,12 +1,39 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<h2>Customers</h2>
-<ul>
-  {% for customer in object_list %}
-    <li><a href="{% url 'customer_detail' customer.pk %}">{{ customer }}</a></li>
-  {% empty %}
-    <li>No customers yet.</li>
-  {% endfor %}
-</ul>
-<a href="{% url 'customer_create' %}">➕ Add New Customer</a>
+<div class="container mt-4">
+    <h2 class="mb-4">Customers</h2>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'customer_create' %}" class="btn btn-primary mb-3">+ Add Customer</a>
+    {% endif %}
+
+    {% if object_list %}
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+            {% for customer in object_list %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{ customer.first_name }} {{ customer.last_name }}
+                            </h5>
+                            <p class="card-text"><strong>Email:</strong> {{ customer.email }}</p>
+                            <p class="card-text"><strong>Phone:</strong> {{ customer.phone|default:"N/A" }}</p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <a href="{% url 'customer_detail' customer.pk %}" class="btn btn-info btn-sm">View</a>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'customer_update' customer.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No customers available yet.</p>
+    {% endif %}
+</div>
 {% endblock %}
+
