@@ -1,66 +1,102 @@
-/* ==========================
+/* ============================
    Global Styles
-   ========================== */
+============================ */
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f8f9fa; /* light gray background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
 }
 
-/* ==========================
-   Navbar
-   ========================== */
-.navbar-brand {
-    font-weight: bold;
-    font-size: 1.3rem;
+a {
+    text-decoration: none;
 }
 
-/* ==========================
-   Flash Messages (Django messages framework)
-   ========================== */
-.alert {
-    margin-top: 1rem;
-}
-
-/* ==========================
-   Dashboard Cards
-   ========================== */
-.card {
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease-in-out;
-}
-.card:hover {
-    transform: scale(1.03);
-}
-
-/* ==========================
-   Car Animation Under Navbar
-   ========================== */
+/* ============================
+   Navbar Car Animation
+============================ */
 .car-animation {
-    position: absolute;
-    top: -18px;   /* move car slightly above line */
-    left: -50px;  /* start off-screen */
-    font-size: 1.5rem; /* size of car */
-    animation: drive 6s linear infinite;
+    font-size: 1.5rem;
+    pointer-events: none;
+    z-index: 1000;
 }
 
+/* ============================
+   Flash Messages
+============================ */
+.alert {
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* ============================
+   Cards
+============================ */
+.card {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+.card h5 {
+    font-weight: 600;
+}
+
+/* ============================
+   Buttons
+============================ */
+.btn {
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+/* ============================
+   Moving Car Keyframe (for thin line if needed)
+============================ */
 @keyframes drive {
     0% { left: -50px; }
     100% { left: 100%; }
 }
-/* 🚗 Car moving back and forth inside navbar */
-.car-navbar {
-    position: absolute;
-    bottom: 5px;       /* place near bottom of navbar */
-    left: -50px;       /* start off-screen */
-    font-size: 1.5rem;
-    animation: driveBackAndForth 8s linear infinite;
+
+/* ============================
+   Responsive adjustments
+============================ */
+@media (max-width: 768px) {
+    .navbar-nav {
+        text-align: center;
+    }
+    .car-animation {
+        font-size: 1.2rem;
+    }
+    .card {
+        margin: 10px auto;
+    }
 }
 
-@keyframes driveBackAndForth {
-    0%   { left: -50px; transform: scaleX(1); }    /* start left */
-    45%  { left: 100%; transform: scaleX(1); }     /* move right */
-    50%  { left: 100%; transform: scaleX(-1); }    /* flip car */
-    95%  { left: -50px; transform: scaleX(-1); }   /* move left */
-    100% { left: -50px; transform: scaleX(1); }    /* reset facing right */
+/* ============================
+   Footer
+============================ */
+footer {
+    font-size: 0.9rem;
+    background-color: #e9ecef;
+}
+
+/* ============================
+   Image thumbnails
+============================ */
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+/* ============================
+   Optional: add hover effect for cards
+============================ */
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
