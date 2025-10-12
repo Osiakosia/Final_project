@@ -15,14 +15,19 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LogoutView
 from django.contrib import messages
 from .forms import SignUpForm
+from django.contrib.auth.views import LoginView
 
 
+# ----------------------------
+# Custom Signup
+# ----------------------------
 def signup(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # auto login after signup
+            login(request, user)  # Auto-login after signup
+            messages.success(request, f"✅ Welcome, {user.first_name or user.username}! Your account has been created.")
             return redirect("index")
     else:
         form = SignUpForm()
@@ -30,13 +35,19 @@ def signup(request):
 
 
 def index(request):
+    recent_services = (
+        ServiceRecord.objects.select_related("car")
+        .order_by("-service_date")[:5]
+    )
     context = {
         "customer_count": Customer.objects.count(),
         "car_count": Car.objects.count(),
         "service_count": ServiceRecord.objects.count(),
-        "recent_services": ServiceRecord.objects.select_related("car").order_by("-service_date")[:5],
+        "part_count": Part.objects.count(),
+        "recent_services": recent_services,
     }
     return render(request, "index.html", context)
+
 
 def test_alerts(request):
     messages.success(request, "✅ Success! Your action worked.")
@@ -45,13 +56,28 @@ def test_alerts(request):
     messages.info(request, "ℹ️ Info: This is just a test message.")
     return redirect("index")
 
+# ----------------------------
+# Custom Login View
+# ----------------------------
+class CustomLoginView(LoginView):
+    template_name = "registration/login.html"
+
+    def form_valid(self, form):
+        user = form.get_user()
+        messages.success(self.request, f"✅ Welcome back, {user.first_name or user.username}!")
+        return super().form_valid(form)
 
 
+
+# ----------------------------
+# Custom Logout View
+# ----------------------------
 class CustomLogoutView(LogoutView):
-    def dispatch(self, request, *args, **kwargs):
-        messages.success(request, "You have been logged out successfully.")
-        return super().dispatch(request, *args, **kwargs)
+    next_page = "index"
 
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(request, "✅ You have been logged out successfully.")
+        return super().dispatch(request, *args, **kwargs)
 
 # --- Customers ---
 class CustomerListView(ListView):
@@ -128,30 +154,39 @@ class ServiceRecordDetailView(DetailView):
 
 class ServiceRecordCreateView(CreateView):
     model = ServiceRecord
-    fields = ["car", "service_type", "description", "mileage_at_service",
-              "service_date", "cost", "mechanic"]
+    fields = ["car", "description", "service_date", "cost"]
     template_name = "services/service_form.html"
-    success_url = reverse_lazy("service_list")
+    success_url = reverse_lazy("index")  # ✅ Redirect to dashboard after create
+
+    def form_valid(self, form):
+        messages.success(self.request, "✅ Service record created successfully!")
+        return super().form_valid(form)
 
 
 class ServiceRecordUpdateView(UpdateView):
     model = ServiceRecord
-    fields = ["car", "service_type", "description", "mileage_at_service",
-              "service_date", "cost", "mechanic"]
+    fields = ["car", "description", "service_date", "cost"]
     template_name = "services/service_form.html"
-    success_url = reverse_lazy("service_list")
+    success_url = reverse_lazy("index")  # ✅ Redirect back to dashboard
+    def form_valid(self, form):
+        messages.success(self.request, "✅ Service record updated successfully!")
+        return super().form_valid(form)
 
 
 class ServiceRecordDeleteView(DeleteView):
     model = ServiceRecord
-    template_name = "confirm_delete.html"
-    success_url = reverse_lazy("service_list")
+    template_name = "services/service_confirm_delete.html"
+    success_url = reverse_lazy("index")  # ✅ Redirect to dashboard
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "🗑️ Service record deleted successfully!")
+        return super().delete(request, *args, **kwargs)
 
 
 # --- Parts ---
 class PartListView(ListView):
     model = Part
     template_name = "parts/part_list.html"
+    context_object_name = "parts"  # 👈 matches your template
 
 
 class PartDetailView(DetailView):
