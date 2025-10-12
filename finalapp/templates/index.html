@@ -1,79 +1,164 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Auto Service{% endblock %}
+
 {% block content %}
+<div class="container mt-5">
+  <h1 class="text-center mb-4">🚗 Auto Service Dashboard</h1>
 
-<div class="text-center">
-    <h1 class="mb-4">Auto Service Dashboard</h1>
-    <p class="lead text-muted">Welcome to your autoservice management system.</p>
-</div>
+  {% if user.is_authenticated %}
+    <div class="alert alert-success text-center shadow-sm">
+      👋 Welcome back, <strong>{{ user.first_name|default:user.username }}</strong>!
+    </div>
+  {% endif %}
 
-<!-- Summary Cards -->
-<div class="row text-center">
-  <!-- Customers -->
-  <div class="col-md-4 mb-3">
-    <div class="card shadow-sm border-primary">
-      <div class="card-body">
-        <h2 class="card-title text-primary">{{ customer_count }}</h2>
-        <p class="card-text">Customers</p>
-        <a href="{% url 'customer_list' %}" class="btn btn-primary btn-sm">View All</a>
+  <!-- ✅ Stats Cards -->
+  <div class="row text-center mb-4">
+    <!-- Customers -->
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-lg border-success h-100">
+        <div class="card-body bg-success bg-opacity-10">
+          <h5 class="card-title text-success fw-bold">Customers</h5>
+          <p class="display-6 fw-bold text-success">{{ customer_count }}</p>
+          <a href="{% url 'customer_list' %}" class="btn btn-outline-success btn-sm">View All</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'customer_create' %}" class="btn btn-success btn-sm mt-1">➕ Add</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Cars -->
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-lg border-primary h-100">
+        <div class="card-body bg-primary bg-opacity-10">
+          <h5 class="card-title text-primary fw-bold">Cars</h5>
+          <p class="display-6 fw-bold text-primary">{{ car_count }}</p>
+          <a href="{% url 'car_list' %}" class="btn btn-outline-primary btn-sm">View All</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'car_create' %}" class="btn btn-primary btn-sm mt-1">➕ Add</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-lg border-warning h-100">
+        <div class="card-body bg-warning bg-opacity-10">
+          <h5 class="card-title text-warning fw-bold">Services</h5>
+          <p class="display-6 fw-bold text-warning">{{ service_count }}</p>
+          <a href="{% url 'service_list' %}" class="btn btn-outline-warning btn-sm">View All</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'service_create' %}" class="btn btn-warning btn-sm mt-1">➕ Add</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Parts -->
+    <div class="col-md-3 mb-3">
+      <div class="card shadow-lg border-info h-100">
+        <div class="card-body bg-info bg-opacity-10">
+          <h5 class="card-title text-info fw-bold">Parts</h5>
+          <p class="display-6 fw-bold text-info">{{ part_count|default:"-" }}</p>
+          <a href="{% url 'part_list' %}" class="btn btn-outline-info btn-sm">View All</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'part_create' %}" class="btn btn-info btn-sm mt-1">➕ Add</a>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Cars -->
-  <div class="col-md-4 mb-3">
-    <div class="card shadow-sm border-success">
-      <div class="card-body">
-        <h2 class="card-title text-success">{{ car_count }}</h2>
-        <p class="card-text">Cars</p>
-        <a href="{% url 'car_list' %}" class="btn btn-success btn-sm">View All</a>
-      </div>
+  <!-- ✅ Active User -->
+  {% if user.is_authenticated %}
+    <div class="text-center mb-4">
+      <span class="badge bg-secondary fs-6 px-3 py-2 shadow-sm">
+        🟢 Active user: {{ user.username }}
+      </span>
+    </div>
+  {% endif %}
+
+  <!-- ✅ Recent Services -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Recent Service Records</h5>
+      <a href="{% url 'service_list' %}" class="btn btn-sm btn-light">View All Services</a>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Car</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Cost (€)</th>
+            {% if user.is_authenticated %}
+              <th>Actions</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for service in recent_services %}
+          <tr>
+            <td>{{ service.car }}</td>
+            <td>{{ service.description }}</td>
+            <td>{{ service.service_date|date:"Y-m-d" }}</td>
+            <td>{{ service.cost }}</td>
+            {% if user.is_authenticated %}
+            <td>
+              <a href="{% url 'service_update' service.pk %}" class="btn btn-warning btn-sm">Edit</a>
+              <button type="button" class="btn btn-danger btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deleteServiceModal{{ service.pk }}">
+                Delete
+              </button>
+            </td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- Services -->
-  <div class="col-md-4 mb-3">
-    <div class="card shadow-sm border-warning">
-      <div class="card-body">
-        <h2 class="card-title text-warning">{{ service_count }}</h2>
-        <p class="card-text">Service Records</p>
-        <a href="{% url 'service_list' %}" class="btn btn-warning btn-sm">View All</a>
+  <!-- ✅ Superuser test button -->
+  {% if user.is_superuser %}
+    <div class="text-center mt-4">
+      <a href="{% url 'test_alerts' %}" class="btn btn-outline-primary">
+        🔔 Trigger Test Messages
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+<!-- ✅ All Delete Modals (placed outside table to avoid flicker) -->
+{% for service in recent_services %}
+<div class="modal fade" id="deleteServiceModal{{ service.pk }}" tabindex="-1" aria-labelledby="deleteServiceModalLabel{{ service.pk }}" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="deleteServiceModalLabel{{ service.pk }}">Confirm Deletion</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete the service record for <strong>{{ service.car }}</strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a href="{% url 'service_delete' service.pk %}" class="btn btn-danger">Yes, Delete</a>
       </div>
     </div>
   </div>
 </div>
+{% endfor %}
 
-<!-- Recent Service Records -->
-<h3 class="mt-5">Recent Service Records</h3>
-<div class="card shadow-sm">
-  <div class="card-body p-0">
-    <table class="table table-striped mb-0">
-      <thead class="table-light">
-        <tr>
-          <th>Date</th>
-          <th>Car</th>
-          <th>Service</th>
-          <th>Cost</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for record in recent_services %}
-        <tr>
-          <td>{{ record.service_date }}</td>
-          <td><a href="{% url 'car_detail' record.car.pk %}">{{ record.car }}</a></td>
-          <td><a href="{% url 'service_detail' record.pk %}">{{ record.get_service_type_display }}</a></td>
-          <td>${{ record.cost }}</td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="4" class="text-center">No recent service records.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="text-center mt-5">
-    <h1>Welcome to the Test App</h1>
-    <a href="{% url 'test_alerts' %}" class="btn btn-primary mt-3">Trigger Test Alerts</a>
-</div>
+<style>
+  tr:hover {
+    background-color: #f8f9fa !important;
+    cursor: pointer;
+  }
+</style>
 {% endblock %}
