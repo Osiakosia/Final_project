@@ -42,7 +42,7 @@ Supports user registration, authentication, car management, and service history 
 - **Database:** SQLite (default, can be replaced with PostgreSQL/MySQL)  
 - **Auth:** Django built-in `auth` system  
 - **Email:** Gmail SMTP or console backend for development  
-- **Tools:** PyCharm / VS Code, Git
+- **Tools:** PyCharm / Git
 
 ---
 
@@ -51,7 +51,6 @@ Supports user registration, authentication, car management, and service history 
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/Osiakosia/Final_project.git
-cd autoservice
 ```
 
 ### 2. Create and activate virtual environment
@@ -89,8 +88,8 @@ Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
 ### 7. Accounts settings for test purposes 
 
-#### Admin user : Login : Admin&&    Pass  admin
-#### Simple user : Login Tina&&      Pass kjuikjui
+#### Admin user : Login : Admin    Pass  admin
+#### Simple user : Login Tina      Pass kjuikjui
 
 ## 📧 Email Setup
 
