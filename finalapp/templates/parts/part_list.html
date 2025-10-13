@@ -3,34 +3,42 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4">Parts</h2>
+  <h2 class="mb-4 text-center">Parts Inventory</h2>
 
-    {% if user.is_authenticated %}
-        <a href="{% url 'part_create' %}" class="btn btn-success mb-3">+ Add Part</a>
-    {% endif %}
+  {% if user.is_authenticated %}
+    <div class="text-end mb-3">
+      <a href="{% url 'part_create' %}" class="btn btn-success">+ Add Part</a>
+    </div>
+  {% endif %}
 
-    {% if parts %}
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {% for part in parts %}
-                <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ part.name }}</h5>
-                            <p class="card-text"><strong>Number:</strong> {{ part.number }}</p>
-                            <p class="card-text"><strong>Price:</strong> €{{ part.price }}</p>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between">
-                            <a href="{% url 'part_detail' part.pk %}" class="btn btn-info btn-sm">View</a>
-                            {% if user.is_authenticated %}
-                                <a href="{% url 'part_update' part.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+  {% if parts %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for part in parts %}
+        <div class="col">
+          <div class="card h-100 shadow-sm border-info">
+            <div class="card-body">
+              <h5 class="card-title text-info">{{ part.name }}</h5>
+              <p class="card-text"><strong>Number:</strong> {{ part.part_number }}</p>
+              <p class="card-text"><strong>Price:</strong> €{{ part.unit_price }}</p>
+              <p class="card-text"><strong>Stock:</strong> {{ part.quantity_in_stock }}</p>
+              {% if part.description %}
+                <p class="card-text text-muted">{{ part.description|truncatechars:60 }}</p>
+              {% endif %}
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+              <a href="{% url 'part_detail' part.pk %}" class="btn btn-info btn-sm">View</a>
+              {% if user.is_authenticated %}
+                <a href="{% url 'part_update' part.pk %}" class="btn btn-warning btn-sm">Edit</a>
+              {% endif %}
+            </div>
+          </div>
         </div>
-    {% else %}
-        <p>No parts found.</p>
-    {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center mt-3">
+      No parts available.
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

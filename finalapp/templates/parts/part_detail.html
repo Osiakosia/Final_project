@@ -1,13 +1,27 @@
 {% extends "base.html" %}
-{% block content %}
-<h2>{{ object.name }}</h2>
-<p>Part Number: {{ object.part_number }}</p>
-<p>Description: {{ object.description }}</p>
-<p>Stock: {{ object.quantity_in_stock }}</p>
-<p>Unit Price: ${{ object.unit_price }}</p>
+{% load static %}
 
-<p>
-  <a href="{% url 'part_update' object.pk %}">✏️ Edit</a> |
-  <a href="{% url 'part_delete' object.pk %}">🗑️ Delete</a>
-</p>
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">Part Details</h2>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title">{{ part.name }}</h5>
+      <p class="card-text"><strong>Part Number:</strong> {{ part.part_number }}</p>
+      <p class="card-text"><strong>Price:</strong> €{{ part.unit_price }}</p>
+      <p class="card-text"><strong>Quantity in Stock:</strong> {{ part.quantity_in_stock }}</p>
+      {% if part.description %}
+        <p class="card-text"><strong>Description:</strong> {{ part.description }}</p>
+      {% endif %}
+    </div>
+
+    <div class="card-footer d-flex justify-content-between">
+      <a href="{% url 'part_list' %}" class="btn btn-secondary btn-sm">Back to List</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'part_update' part.pk %}" class="btn btn-warning btn-sm">Edit</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}
