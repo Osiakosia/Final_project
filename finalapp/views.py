@@ -1,14 +1,10 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 
 # Create your views here.
 
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import  Part
-from django.shortcuts import render
 from .models import Customer, Car, ServiceRecord
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
@@ -16,6 +12,7 @@ from django.contrib.auth.views import LogoutView
 from django.contrib import messages
 from .forms import SignUpForm
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # ----------------------------
@@ -145,6 +142,8 @@ class CarDeleteView(DeleteView):
 class ServiceRecordListView(ListView):
     model = ServiceRecord
     template_name = "services/service_list.html"
+    context_object_name = "servicerecord_list"
+    ordering = ["-service_date"]
 
 
 class ServiceRecordDetailView(DetailView):
@@ -183,7 +182,7 @@ class ServiceRecordDeleteView(DeleteView):
 
 
 # --- Parts ---
-class PartListView(ListView):
+class PartListView(LoginRequiredMixin,ListView):
     model = Part
     template_name = "parts/part_list.html"
     context_object_name = "parts"  # 👈 matches your template
