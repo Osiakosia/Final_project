@@ -1,27 +1,51 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}Customers | Auto Service{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Customers</h2>
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Customers</h2>
 
     {% if user.is_authenticated %}
-        <a href="{% url 'customer_create' %}" class="btn btn-primary mb-3">+ Add Customer</a>
+        <div class="text-end mb-3">
+            <a href="{% url 'customer_create' %}" class="btn btn-success">➕ Add Customer</a>
+        </div>
     {% endif %}
 
-    {% if object_list %}
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-            {% for customer in object_list %}
+    {% if customers %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for customer in customers %}
                 <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                {{ customer.first_name }} {{ customer.last_name }}
-                            </h5>
-                            <p class="card-text"><strong>Email:</strong> {{ customer.email }}</p>
-                            <p class="card-text"><strong>Phone:</strong> {{ customer.phone|default:"N/A" }}</p>
+                    <div class="card shadow-sm h-100 border-0">
+                        <div class="card-body text-center">
+                            <!-- 🧑 Avatar -->
+                            {% if customer.avatar %}
+                                <img src="{{ customer.avatar.url }}" alt="Avatar" class="rounded-circle mb-3 shadow" style="width:100px; height:100px; object-fit:cover;">
+                            {% else %}
+                                <img src="{% static 'finalapp/img/default-avatar.png' %}" alt="No avatar" class="rounded-circle mb-3 shadow" style="width:100px; height:100px; object-fit:cover;">
+                            {% endif %}
+
+                            <!-- 🪪 Info -->
+                            <h5 class="card-title mb-1">{{ customer.first_name }} {{ customer.last_name }}</h5>
+                            <p class="card-text text-muted small">{{ customer.email }}</p>
+
+                            {% if customer.phone %}
+                                <p class="mb-1"><strong>Phone:</strong> {{ customer.phone }}</p>
+                            {% endif %}
+
+                            {% if customer.address %}
+                                <p class="text-muted mb-2">{{ customer.address }}</p>
+                            {% endif %}
+
+                            <!-- 🚗 Related cars count (optional) -->
+                            {% if customer.cars.all %}
+                                <p class="small text-secondary">Cars: {{ customer.cars.count }}</p>
+                            {% endif %}
                         </div>
-                        <div class="card-footer d-flex justify-content-between">
+
+                        <!-- Footer actions -->
+                        <div class="card-footer bg-light text-center">
                             <a href="{% url 'customer_detail' customer.pk %}" class="btn btn-info btn-sm">View</a>
                             {% if user.is_authenticated %}
                                 <a href="{% url 'customer_update' customer.pk %}" class="btn btn-warning btn-sm">Edit</a>
@@ -32,8 +56,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <p class="text-muted">No customers available yet.</p>
+        <p class="text-center text-muted mt-4">No customers found.</p>
     {% endif %}
 </div>
 {% endblock %}
-
