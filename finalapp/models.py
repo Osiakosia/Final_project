@@ -10,6 +10,8 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=20, unique=True)
     email = models.EmailField(blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)  # ← add this line
+    avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
