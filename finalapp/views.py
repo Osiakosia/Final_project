@@ -13,7 +13,7 @@ from django.contrib import messages
 from .forms import SignUpForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from .forms import CustomerForm
 
 # ----------------------------
 # Custom Signup
@@ -80,6 +80,7 @@ class CustomLogoutView(LogoutView):
 class CustomerListView(ListView):
     model = Customer
     template_name = "customers/customer_list.html"
+    context_object_name = "customers"   # ✅ important: use same name as template
 
 
 class CustomerDetailView(DetailView):
@@ -89,14 +90,14 @@ class CustomerDetailView(DetailView):
 
 class CustomerCreateView(CreateView):
     model = Customer
-    fields = ["first_name", "last_name", "phone", "email"]
+    form_class = CustomerForm
     template_name = "customers/customer_form.html"
     success_url = reverse_lazy("customer_list")
 
 
 class CustomerUpdateView(UpdateView):
     model = Customer
-    fields = ["first_name", "last_name", "phone", "email"]
+    form_class = CustomerForm
     template_name = "customers/customer_form.html"
     success_url = reverse_lazy("customer_list")
 
@@ -142,8 +143,6 @@ class CarDeleteView(DeleteView):
 class ServiceRecordListView(ListView):
     model = ServiceRecord
     template_name = "services/service_list.html"
-    context_object_name = "servicerecord_list"
-    ordering = ["-service_date"]
 
 
 class ServiceRecordDetailView(DetailView):
@@ -191,7 +190,11 @@ class PartListView(LoginRequiredMixin,ListView):
 class PartDetailView(DetailView):
     model = Part
     template_name = "parts/part_detail.html"
+    context_object_name = "part"
 
+# Optional: where to redirect if not logged in
+    login_url = "/accounts/login/"  # or your custom login route
+    redirect_field_name = "next"
 
 class PartCreateView(CreateView):
     model = Part
@@ -211,5 +214,6 @@ class PartDeleteView(DeleteView):
     model = Part
     template_name = "confirm_delete.html"
     success_url = reverse_lazy("part_list")
+
 
 
